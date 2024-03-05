@@ -25,13 +25,13 @@
 
         socket.on("partie",(data)=>{
             p=document.createElement("p")
-            p.innerHTML=("partie : "+data.nom+"<br>"+"id1 : "+data.id1+"<br>"+"id2 : "+data.id2)
+            p.innerHTML=("<center>"+"partie : "+data.nom+"<br>"+"id1 : "+data.id1+"<br>"+"id2 : "+data.id2+"</center>")
             document.body.append(p)
         })
 
         socket.on("aff",(data)=>{
             p=document.createElement("p")
-            p.innerHTML=(data)
+            p.innerHTML=(data.j1.pseudo)
             document.body.append(p)
         })
 
