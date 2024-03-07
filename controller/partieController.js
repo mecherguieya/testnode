@@ -109,6 +109,29 @@ async function getbyidsocket(data) {
   }
 }
 
+async function attack(io, id1, id2) {
+  try {
+    const { j1, j2 } = await getbyidsocket({ id1, id2 });
+    const score1 = j1.score + 20;
+    j2.sante = j2.sante - 10;
+    if (j1.score >= 100 || j2.sante <= 0) {
+      io.emit("fini", j1.pseudo.toString() + " a gagné!");
+    }
+    if (j2.score >= 100 || j1.sante <= 0) {
+      io.emit("fini", j2.pseudo.toString() + " a gagné!");
+    } else {
+      j1.score = score1;
+      await Joueur.findByIdAndUpdate(j1._id, j1);
+      await Joueur.findByIdAndUpdate(j2._id, j2);
+      const r = { j1: j1, j2: j2 };
+      io.emit("aff", r);
+      console.log("Success!");
+    }
+  } catch (err) {
+    console.log("Error : " + err.message);
+  }
+}
+
 module.exports = {
   getall,
   add,
@@ -117,5 +140,6 @@ module.exports = {
   attaque,
   addpartie,
   addpartiesocket,
-  getbyidsocket
+  getbyidsocket,
+  attack,
 };

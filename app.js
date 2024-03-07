@@ -5,6 +5,7 @@ const mongo = require("mongoose");
 const bodyparser = require("body-parser");
 const path = require("path");
 const{addpartiesocket,getbyidsocket}=require('./controller/partieController')
+const partieController = require('./controller/partieController')
 mongo
   .connect(config.url, {
     useNewUrlParser: true,
@@ -37,6 +38,9 @@ io.on("connection", (socket) => {
     addpartiesocket(data)
     io.emit("partie", data);
   });
+  // socket.on("fini",data=>{
+  //   window.alert(data);
+  // })
 
   socket.on("aff",async (data) => {
     const dataupdate=await getbyidsocket(data)
@@ -46,13 +50,16 @@ io.on("connection", (socket) => {
   socket.on("msg", (data) => {
     io.emit("msg", data);
   });
-
   socket.on("typing", (data) => {
     socket.broadcast.emit("typing", data);
   });
   socket.on("disconnect", () => {
     io.emit("msg", "An user is disconnected");
   });
+  socket.on("attack",data=>{
+    partieController.attack(io,data.j1,data.j2);
+  });
+
 });
 
 server.listen(3000, console.log("server run"));
